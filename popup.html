@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Jobs Filter</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 400px;
+      margin: 0;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .tab {
+      display: none;
+      padding: 10px 0;
+    }
+    .tab.active {
+      display: block;
+    }
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .tab-button {
+      padding: 8px 12px;
+      cursor: pointer;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      margin-right: 5px;
+      border-radius: 4px 4px 0 0;
+    }
+    .tab-button.active {
+      background: #fff;
+      border-bottom: 1px solid white;
+      margin-bottom: -1px;
+    }
+    .rule-container {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    .rule-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .rule-input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .action-container {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    .radio-group {
+      margin-bottom: 10px;
+    }
+    .checkbox-group {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+    .color-picker {
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    .add-rule-button {
+      width: 100%;
+      padding: 8px;
+      background-color: #0077b5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .delete-rule-button {
+      background: none;
+      border: none;
+      color: #ff4040;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .invalid-regex {
+      color: red;
+      font-size: 12px;
+      margin-top: -5px;
+      margin-bottom: 5px;
+      display: none;
+    }
+    .global-setting {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .global-setting:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>LinkedIn Jobs Filter</h2>
+  
+  <!-- Tab Navigation -->
+  <div class="tab-buttons">
+    <div class="tab-button active" data-tab="description">Job Description Rules</div>
+    <div class="tab-button" data-tab="company">Company Rules</div>
+    <div class="tab-button" data-tab="global">Global Settings</div>
+  </div>
+  
+  <!-- Job Description Rules Tab -->
+  <div class="tab active" id="description-tab">
+    <div id="description-rules-container">
+      <!-- Rule templates will be added here by JavaScript -->
+    </div>
+    <button class="add-rule-button" id="add-description-rule">
+      <i class="fas fa-plus"></i> Add New Description Rule
+    </button>
+  </div>
+  
+  <!-- Company Rules Tab -->
+  <div class="tab" id="company-tab">
+    <div id="company-rules-container">
+      <!-- Rule templates will be added here by JavaScript -->
+    </div>
+    <button class="add-rule-button" id="add-company-rule">
+      <i class="fas fa-plus"></i> Add New Company Rule
+    </button>
+  </div>
+  
+  <!-- Global Settings Tab -->
+  <div class="tab" id="global-tab">
+    <div class="global-setting">
+      <h3>No Longer Accepting Applications</h3>
+      <div class="action-container">
+        <div class="radio-group">
+          <input type="radio" name="no-longer-accepting-action" value="disable" id="no-longer-accepting-disable"> 
+          <label for="no-longer-accepting-disable">Disable</label>
+          <input type="radio" name="no-longer-accepting-action" value="hide" id="no-longer-accepting-hide"> 
+          <label for="no-longer-accepting-hide">Hide</label>
+          <input type="radio" name="no-longer-accepting-action" value="warn" id="no-longer-accepting-warn"> 
+          <label for="no-longer-accepting-warn">Warn</label>
+        </div>
+        
+        <div class="checkbox-group hide-options" style="display: none;">
+          <div>
+            <input type="checkbox" id="no-longer-accepting-auto-hide"> 
+            <label for="no-longer-accepting-auto-hide">Auto Hide</label>
+          </div>
+          <div>
+            <input type="checkbox" id="no-longer-accepting-click-hide"> 
+            <label for="no-longer-accepting-click-hide">Auto Click LinkedIn native Hide</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+        
+        <div class="checkbox-group warn-options" style="display: none;">
+          <div>
+            <input type="checkbox" id="no-longer-accepting-bg-color"> 
+            <label for="no-longer-accepting-bg-color">Change BG color</label>
+            <input type="color" class="color-picker" value="#FFF0F0">
+          </div>
+          <div>
+            <input type="checkbox" id="no-longer-accepting-highlight"> 
+            <label for="no-longer-accepting-highlight">Highlight</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="global-setting">
+      <h3>If Already Applied</h3>
+      <div class="action-container">
+        <div class="radio-group">
+          <input type="radio" name="applied-action" value="disable" id="applied-disable"> 
+          <label for="applied-disable">Disable</label>
+          <input type="radio" name="applied-action" value="hide" id="applied-hide"> 
+          <label for="applied-hide">Hide</label>
+          <input type="radio" name="applied-action" value="warn" id="applied-warn"> 
+          <label for="applied-warn">Warn</label>
+        </div>
+        
+        <div class="checkbox-group hide-options" style="display: none;">
+          <div>
+            <input type="checkbox" id="applied-auto-hide"> 
+            <label for="applied-auto-hide">Auto Hide</label>
+          </div>
+          <div>
+            <input type="checkbox" id="applied-click-hide"> 
+            <label for="applied-click-hide">Auto Click LinkedIn native Hide</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+        
+        <div class="checkbox-group warn-options" style="display: none;">
+          <div>
+            <input type="checkbox" id="applied-bg-color"> 
+            <label for="applied-bg-color">Change BG color</label>
+            <input type="color" class="color-picker" value="#F0F0FF">
+          </div>
+          <div>
+            <input type="checkbox" id="applied-highlight"> 
+            <label for="applied-highlight">Highlight</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="global-setting">
+      <h3>Reposted Job (When Sorting by Recent)</h3>
+      <div class="action-container">
+        <div class="radio-group">
+          <input type="radio" name="reposted-action" value="disable" id="reposted-disable"> 
+          <label for="reposted-disable">Disable</label>
+          <input type="radio" name="reposted-action" value="hide" id="reposted-hide"> 
+          <label for="reposted-hide">Hide</label>
+          <input type="radio" name="reposted-action" value="warn" id="reposted-warn"> 
+          <label for="reposted-warn">Warn</label>
+        </div>
+        
+        <div class="checkbox-group hide-options" style="display: none;">
+          <div>
+            <input type="checkbox" id="reposted-auto-hide"> 
+            <label for="reposted-auto-hide">Auto Hide</label>
+          </div>
+          <div>
+            <input type="checkbox" id="reposted-click-hide"> 
+            <label for="reposted-click-hide">Auto Click LinkedIn native Hide</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+        
+        <div class="checkbox-group warn-options" style="display: none;">
+          <div>
+            <input type="checkbox" id="reposted-bg-color"> 
+            <label for="reposted-bg-color">Change BG color</label>
+            <input type="color" class="color-picker" value="#FFFFF0">
+          </div>
+          <div>
+            <input type="checkbox" id="reposted-highlight"> 
+            <label for="reposted-highlight">Highlight</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="global-setting">
+      <h3>Highlight in Job Card</h3>
+      <div>
+        <input type="checkbox" id="highlight-promoted"> 
+        <label for="highlight-promoted">Highlight "Promoted"</label>
+        <input type="color" class="color-picker" value="#FFFF00">
+      </div>
+      <div>
+        <input type="checkbox" id="highlight-viewed"> 
+        <label for="highlight-viewed">Highlight "Viewed"</label>
+        <input type="color" class="color-picker" value="#E6E6FA">
+      </div>
+    </div>
+    
+    <div class="global-setting">
+      <h3>Show Application Count</h3>
+      <div>
+        <input type="checkbox" id="show-application-count"> 
+        <label for="show-application-count">Show "how many people applied" count on job card</label>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Rule template (hidden, will be cloned by JavaScript) -->
+  <template id="rule-template">
+    <div class="rule-container">
+      <input type="text" class="rule-input" placeholder="Enter regex pattern">
+      <div class="invalid-regex">Invalid regex pattern</div>
+      
+      <div class="action-container">
+        <div class="radio-group">
+          <input type="radio" name="action" value="disable" class="action-radio"> 
+          <label>Disable</label>
+          <input type="radio" name="action" value="hide" class="action-radio"> 
+          <label>Hide</label>
+          <input type="radio" name="action" value="warn" class="action-radio"> 
+          <label>Warn</label>
+        </div>
+        
+        <div class="checkbox-group hide-options" style="display: none;">
+          <div>
+            <input type="checkbox" class="auto-hide-checkbox"> 
+            <label>Auto Hide</label>
+          </div>
+          <div>
+            <input type="checkbox" class="click-hide-checkbox"> 
+            <label>Auto Click LinkedIn native Hide</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+        
+        <div class="checkbox-group warn-options" style="display: none;">
+          <div>
+            <input type="checkbox" class="bg-color-checkbox"> 
+            <label>Change BG color</label>
+            <input type="color" class="color-picker" value="#FFF0F0">
+          </div>
+          <div>
+            <input type="checkbox" class="highlight-checkbox"> 
+            <label>Highlight</label>
+          </div>
+          <div class="checkbox-warning" style="color: red; display: none;">
+            Please select at least one option
+          </div>
+        </div>
+        
+        <button class="delete-rule-button">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </template>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+/* popup.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 600px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  
+  .container {
+    padding: 15px;
+  }
+  
+  h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #0077b5;
+  }
+  
+  h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  /* Tabs */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 15px;
+  }
+  
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .tab-btn.active {
+    border-bottom: 2px solid #0077b5;
+    font-weight: bold;
+    color: #0077b5;
+  }
+  
+  /* Tab content */
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  /* Rules */
+  .rules-container {
+    margin-bottom: 15px;
+  }
+  
+  .rule {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .rule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .rule-enabled {
+    display: flex;
+    align-items: center;
+  }
+  
+  .rule-regex {
+    flex-grow: 1;
+    margin: 0 10px;
+  }
+  
+  .rule-regex input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .rule-regex.invalid input {
+    border-color: red;
+  }
+  
+  .rule-actions {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+  }
+  
+  .checkbox-group label {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+  }
+  
+  input[type="color"] {
+    width: 25px;
+    height: 25px;
+    border: none;
+    padding: 0;
+    margin: 0 10px;
+  }
+  
+  .add-rule-btn {
+    background-color: #0077b5;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .delete-rule-btn {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  /* Global rules */
+  .global-rule {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .global-rule label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .action-selection {
+    margin-left: 15px;
+  }
+  
+  .action-type-selection {
+    margin-bottom: 10px;
+  }
+  
+  .action-type-selection label {
+    margin-right: 15px;
+    font-weight: normal;
+  }
+  
+  .action-options {
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 2px solid #eee;
+  }
